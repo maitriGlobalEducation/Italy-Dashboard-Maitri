@@ -1,5 +1,5 @@
 // src/pages/Signup.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,17 +8,19 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Signup = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/signup`, data);
-      console.log(API_BASE_URL);
-      localStorage.setItem("token", res.data.token); // Save token
-      alert("Signup successful!");
-      navigate("/login"); // Redirect to dashboard (protected)
+      alert("Signup successful! Please log in from the main page.");
+      navigate("/"); // Redirect to dashboard (protected)
     } catch (err) {
       console.error(err.response?.data);
       alert(err.response?.data?.error || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,8 +48,12 @@ const Signup = () => {
                  className="w-full border p-2 rounded" />
           <p className="text-red-500 text-sm">{errors.password?.message}</p>
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Signup
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+          disabled={loading}
+        >
+          {loading ? "Signing up..." : "Signup"}
         </button>
       </form>
     </div>

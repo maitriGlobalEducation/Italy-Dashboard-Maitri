@@ -7,8 +7,7 @@ const Landing = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Welcome to Maitri Healthcare Portal</h1>
       <p className="text-gray-600 mb-8 text-center max-w-md">
-        Apply to work as a healthcare professional in Italy. Start by logging in or creating an account.
-      </p>
+Please Login to view the Details via Dashboard      </p>
       <div className="flex gap-4">
         <button
           onClick={() => navigate("/login")}
