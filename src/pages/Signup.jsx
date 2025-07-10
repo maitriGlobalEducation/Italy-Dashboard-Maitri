@@ -15,7 +15,8 @@ const Signup = () => {
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/signup`, data);
       alert("Signup successful! Please log in from the main page.");
-      navigate("/"); // Redirect to dashboard (protected)
+      navigate("/"); 
+      
     } catch (err) {
       console.error(err.response?.data);
       alert(err.response?.data?.error || "Signup failed");
