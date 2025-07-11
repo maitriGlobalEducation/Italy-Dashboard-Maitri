@@ -26,24 +26,42 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const fetchSubmissions = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${API_BASE_URL}/api/dashboard`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSubmissions(res.data.submissions);
-      setFiltered(res.data.submissions);
-    } catch (err) {
-      console.error("Error fetching dashboard:", err.response?.data);
-      alert("Session expired or unauthorized");
+ const fetchSubmissions = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Session expired. Please login again.");
+    handleLogout();
+    return;
+  }
+
+  try {
+    const res = await axios.get(`${API_BASE_URL}/api/dashboard`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setSubmissions(res.data.submissions);
+    setFiltered(res.data.submissions);
+  } catch (err) {
+    console.error("Error fetching dashboard:", err.response?.data);
+
+    if (err.response?.status === 401) {
+      alert("Session expired or unauthorized. Please login again.");
       handleLogout();
-    } finally {
-      setLoading(false);
-    }
-  };
+    } else {
+    alert(
+      `Something went wrong while loading the dashboard.\nError: ${
+        err.response?.data?.error || err.message
+      }`
+    );
+  }
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const applyFilters = () => {
     let temp = [...submissions];

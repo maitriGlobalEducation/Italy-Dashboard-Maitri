@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ const Login = () => {
       const res = await axios.post(`${API_BASE_URL}/api/auth/login`, data);
 
       localStorage.setItem("token", res.data.token);
+      console.log(res.data.token);
       navigate("/dashboard");
     } catch (err) {
       console.error(err.response?.data);
@@ -27,8 +28,16 @@ const Login = () => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    navigate("/dashboard");
+  }
+}, []);
+
 
   return (
+    
     <div className="max-w-md mx-auto mt-10 border p-6 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-4">Login</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
